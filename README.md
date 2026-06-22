@@ -1,2 +1,2 @@
 # ai-task-agent
-A lightweight CLI-based agentic AI system demonstrating the ReAct loop with tool use: built with Python and the Anthropic API.
+A CLI-based agentic AI that searches PubMed for any user-provided topic, retrieves publication counts by year, and summarizes key findings as structured bullet points — built with Python and the Anthropic API.
