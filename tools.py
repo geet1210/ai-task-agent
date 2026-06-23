@@ -22,8 +22,26 @@ def fetch_details(id_list):
 	"""Fetch article details for a list of PubMed IDs"""
 	ids=",".join(id_list)
 
-	handle=Entrez.efetch(db='pubmed', ids=ids, rettype="abstract", retmode="xml")
+	handle=Entrez.efetch(db='pubmed', id=ids, rettype="abstract", retmode="xml")
 	records=Entrez.read(handle)
 	handle.close()
 
 	return records
+
+def count_by_year(records):
+	"""Count number of publications per year"""
+	year_counts={}
+
+	for article in records["PubmedArticle"]:
+		try:
+			year=article["MedlineCitation"]["Article"]["Journal"]["JournalIssue"]["PubDate"]["Year"]
+			if year in year_counts:
+				year_counts[year]+=1
+			else:
+				year_counts[year] = 1
+		except KeyError:
+			pass
+
+	sorted_counts=dict(sorted(year_counts.items()))
+
+	return sorted_counts
