@@ -66,7 +66,7 @@ def run_agent(topic):
 	user_prompt = input("\nAny specific aspect you want to focus on? (press Enter to skip): ").strip()
 
 	if user_prompt:
-		final_prompt = f"{system_prompt}\n\nUser also wants to know: {user_prompt}\n\nAbstracts:\n{combined}"
+		final_prompt = f"{system_prompt}\n\nIMPORTANT: The user specifically wants you to focus on: '{user_prompt}'. Make this the PRIMARY focus of your analysis. Structure your entire response around this aspect.\n\nAbstracts:\n{combined}"
 	else:
 		final_prompt = f"{system_prompt}\n\nAbstracts:\n{combined}"
 
