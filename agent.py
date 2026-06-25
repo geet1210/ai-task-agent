@@ -48,7 +48,7 @@ def run_agent(topic):
 	for article in records["PubmedArticle"]:
 		try:
 			abstract=article["MedlineCitation"]["Article"]["Abstract"]["AbstractText"][0]
-			abstracts.append(str(abstract))
+			abstracts.append(str(abstract)[:500])
 		except KeyError:
 			pass
 
@@ -70,10 +70,24 @@ def run_agent(topic):
 	else:
 		final_prompt = f"{system_prompt}\n\nAbstracts:\n{combined}"
 
-	response = client.models.generate_content(model="gemini-2.0-flash-lite", contents=final_prompt)
+# Step 6: Send to Gemini WITH retry
+	import time
 	print("\n Summary of findings:")
-	print(response.text)
-
+	for attempt in range(3):
+		try:
+			response = client.models.generate_content(
+				model="gemini-2.5-flash",
+				contents=final_prompt
+			)
+			print(response.text)
+			break
+		except Exception as e:
+			if attempt < 2:
+				print(f"Retrying in 30 seconds... ({attempt+1}/3)")
+				time.sleep(30)
+			else:
+				print(f"Gemini unavailable: {e}")
+				return
 if __name__ == "__main__":
-    topic = input("Enter a medical topic to research: ")
-    run_agent(topic)
+	topic = input("Enter a medical topic to research: ")
+	run_agent(topic)
